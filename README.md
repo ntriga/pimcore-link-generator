@@ -1,7 +1,6 @@
 # Easy link generator for Objects
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ntriga/pimcore-link-generator.svg?style=flat-square)](https://packagist.org/packages/ntriga/pimcore-link-generator)
-[![Tests](https://img.shields.io/github/actions/workflow/status/ntriga/pimcore-link-generator/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ntriga/pimcore-link-generator/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/ntriga/pimcore-link-generator.svg?style=flat-square)](https://packagist.org/packages/ntriga/pimcore-link-generator)
 
 Generate urls for objects using the NtrigaLinkGenerator.
@@ -18,12 +17,6 @@ composer require ntriga/pimcore-link-generator
 
 ```php
 todo
-```
-
-## Testing
-
-```bash
-composer test
 ```
 
 ## Changelog
