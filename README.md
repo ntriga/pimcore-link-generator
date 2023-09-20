@@ -32,7 +32,7 @@ This property will store the parent page of the object.
 This makes it easy to link another document for each language.
 
 E.g. "news_document"
-![document settings.png](docs%2Fimages%2Fdocument%20settings.png)
+![document settings.png](https://github.com/ntriga/pimcore-link-generator/blob/main/images/document%20settings.png?raw=true)
 
 ### Create an action with the correct annotation
 Create an action that will be used to generate the link.  
@@ -81,7 +81,7 @@ class NewsLinkGenerator extends NtrigaLinkGenerator
      * Optional
      * Here you can set the name of the method that will be used to generate the slug
      * Default is "getName"
-     * If you have a slug input field, this will be used instead
+     * If you have a slug input field, this will be used instead (not a field of the type slug)
      */
     protected function getObjectDefaultSlugField(): string
     {
