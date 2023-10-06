@@ -9,7 +9,6 @@ use Pimcore\Model\DataObject\ClassDefinition\LinkGeneratorInterface;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\Document;
 use Pimcore\Model\Document\Service;
-use Pimcore\Sitemap\UrlGeneratorInterface;
 use Pimcore\Twig\Extension\Templating\PimcoreUrl;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -22,7 +21,6 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         private RequestStack $requestStack,
         private PimcoreUrl $pimcoreUrl,
         private LocaleServiceInterface $localeService,
-        private UrlGeneratorInterface $urlGenerator,
     ) {}
 
     abstract protected function getDefaultDocumentPropertyName(): string;
@@ -33,7 +31,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         return 'getName';
     }
 
-    public function generate(Concrete $object, array $params = []): string
+    public function generate(object $object, array $params = []): string
     {
         $this->validateObjectClass($object);
 
@@ -43,10 +41,10 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         $fullPath = $this->addParentPaths($fullPath, $object, $params);
         $slug = $this->getSlug($object);
 
-        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale, $params['referenceType'] ?? null);
+        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale);
     }
 
-    protected function validateObjectClass(Concrete $object): void
+    protected function validateObjectClass(object $object): void
     {
         if (!is_a($object, $this->getObjectClassName())) {
             throw new InvalidArgumentException("Given object is not an instance of {$this->getObjectClassName()}");
@@ -67,7 +65,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         return '';
     }
 
-    protected function addParentPaths(string $fullPath, Concrete $object, array $params): string
+    protected function addParentPaths(string $fullPath, object $object, array $params): string
     {
         $parent = $params['parent'] ?? $object->getParent();
         if ($parent) {
@@ -123,7 +121,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         return $defaultDocument;
     }
 
-    protected function getSlug(Concrete $object): string
+    protected function getSlug(object $object): string
     {
         $slugger = new AsciiSlugger();
 
@@ -145,7 +143,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
     }
 
 
-    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale, ?int $referenceType): string
+    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale): string
     {
         $url = $this->pimcoreUrl->__invoke(
             [
@@ -157,10 +155,6 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
             $this->getRouteName(),
             true
         );
-
-        if ($referenceType === 0) {
-            return $this->urlGenerator->generateUrl($url);
-        }
 
         return $url;
     }
