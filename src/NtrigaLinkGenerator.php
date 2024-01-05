@@ -3,6 +3,7 @@
 namespace Ntriga\PimcoreLinkGenerator;
 
 use InvalidArgumentException;
+use Pimcore\Bundle\SeoBundle\Sitemap\UrlGeneratorInterface;
 use Pimcore\Http\Request\Resolver\DocumentResolver;
 use Pimcore\Localization\LocaleServiceInterface;
 use Pimcore\Model\DataObject\ClassDefinition\LinkGeneratorInterface;
@@ -21,6 +22,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         private RequestStack $requestStack,
         private PimcoreUrl $pimcoreUrl,
         private LocaleServiceInterface $localeService,
+        private UrlGeneratorInterface $urlGenerator
     ) {}
 
     abstract protected function getDefaultDocumentPropertyName(): string;
@@ -41,7 +43,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         $fullPath = $this->addParentPaths($fullPath, $object, $params);
         $slug = $this->getSlug($object);
 
-        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale);
+        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale, $params);
     }
 
     protected function validateObjectClass(object $object): void
@@ -143,7 +145,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
     }
 
 
-    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale): string
+    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale, array $params): string
     {
         $url = $this->pimcoreUrl->__invoke(
             [
@@ -155,6 +157,10 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
             $this->getRouteName(),
             true
         );
+
+        if (isset($params['referenceType']) && $params['referenceType'] === 0){
+            $url = $this->urlGenerator->generateUrl($url);
+        }
 
         return $url;
     }
