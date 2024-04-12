@@ -135,6 +135,7 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
 
         if (empty($slug) && method_exists($object, $slugMethod)) {
             $slug = $object->{$slugMethod}();
+            $slug = strtolower($slug);
         }
 
         if (empty($slug)) {
