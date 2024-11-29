@@ -149,6 +149,35 @@ services:
 With this strategy, the detail page will be accessible via multiple URLs.
 So it's important you set a canonical link on the detail page.
 
+## Additional features
+### Query parameters
+You can add query parameters to the generated URL by passing them in the `queryParams` array:
+```php
+// Single parameter
+$link = $productLinkGenerator->generate($object, [
+    'queryParams' => ['color' => 'red']
+]);
+// Result: /en/products/my-product?color=red
+
+// Multiple parameters
+$link = $productLinkGenerator->generate($object, [
+    'queryParams' => [
+        'color' => 'red',
+        'size' => 'large',
+        'category' => 'shirts'
+    ]
+]);
+// Result: /en/products/my-product?color=red&size=large&category=shirts
+
+// Combined with other parameters
+$link = $productLinkGenerator->generate($object, [
+    'document' => $document,
+    '_locale' => 'en',
+    'queryParams' => ['color' => 'red']
+]);
+// Result: /en/products/my-product?color=red
+```
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.

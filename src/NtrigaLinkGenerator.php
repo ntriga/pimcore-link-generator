@@ -43,7 +43,10 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
         $fullPath = $this->addParentPaths($fullPath, $object, $params);
         $slug = $this->getSlug($object);
 
-        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale, $params);
+        // Extract query parameters from the dedicated queryParams key
+        $queryParams = $params['queryParams'] ?? [];
+
+        return $this->generateUrl($slug, $object->getId(), $fullPath, $locale, $params, $queryParams);
     }
 
     protected function validateObjectClass(object $object): void
@@ -146,15 +149,20 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
     }
 
 
-    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale, array $params): string
+    protected function generateUrl(string $slug, int $objectId, string $fullPath, string $locale, array $params, array $queryParams = []): string
     {
+        $urlParams = [
+            'objectSlug' => strtolower($slug),
+            'objectId' => $objectId,
+            'path' => strtolower($fullPath),
+            '_locale' => strtolower($locale),
+        ];
+
+        // Merge query parameters with the base URL parameters
+        $urlParams = array_merge($queryParams, $urlParams);
+
         $url = $this->pimcoreUrl->__invoke(
-            [
-                'objectSlug' => strtolower($slug),
-                'objectId' => $objectId,
-                'path' => strtolower($fullPath),
-                '_locale' => strtolower($locale),
-            ],
+            $urlParams,
             $this->getRouteName(),
             true
         );
