@@ -141,8 +141,8 @@ abstract class NtrigaLinkGenerator implements LinkGeneratorInterface
             $slug = strtolower($slug);
         }
 
-        if (empty($slug)) {
-            throw new InvalidArgumentException('The object lacks a getSlug or ' . $slugMethod . ' method.');
+        if (empty($slug)){
+            $slug = (string)$object->getId();
         }
 
         return $slugger->slug($slug)->toString();
